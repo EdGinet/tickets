@@ -3,7 +3,30 @@
 {% block title %}
     Tickets - Contact
 {% endblock %}
+
 {% block body %}
-	<h1>Contactez nous</h1>
-	<h1>Ecrivez-nous</h1>
+	<div class="left-panel">
+        <h1>Contactez-nous</h1>
+        <ul>
+            <li>122 route de Baillon, 95270 Chaumontel</li>
+            <li>01 23 45 67 89</li>
+            <li>adressemail@mail.fr</li>
+            <li>Tous les jours : 8h00 - 19h00</li>
+        </ul>
+    </div>
+
+    <div class="right-panel">
+        <h1>Ecrivez nous</h1>
+        <form class="contact-form" action="" method="POST">
+            <input type="text" id="nom" name="name" placeholder="Nom" required />
+
+            <input type="email" id="email" name="email" placeholder="Email" required/>
+
+            <input type="text" id="item" name="objet" placeholder="Objet" required/>
+
+            <textarea id="message" name="message" rows="10" cols="50" placeholder="Message" required></textarea>
+
+            <button type="submit" value="envoyer" name="envoyer" id="send-btn">Envoyer</button>
+        </form>
+    </div>
 {% endblock %}
