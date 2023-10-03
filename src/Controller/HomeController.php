@@ -7,10 +7,9 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class HomeController extends AbstractController
 {
-    #[Route('/', name:'home_number', methods:['GET'])]
-    public function number() : Response
+    #[Route('/', name:'home_index', methods:['GET'])]
+    public function show() : Response
     {
-	    $number = rand(0,100);
         return $this->render('home.html.twig');
     }
 }
