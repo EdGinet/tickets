@@ -1,14 +1,14 @@
 <?php
 namespace App\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Route;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
-class Connexion extends AbstractController 
+class RegisterController extends AbstractController 
 {
-    #[Route('/inscription', name:'register_form', methods: ['GET', 'POST'])]
-    public function show(): Response {
+    #[Route('/inscription', name:'register', methods: ['GET', 'POST'])]
+    public function show() : Response {
         return $this->render('register.html.twig');
     }
 }

@@ -1,13 +1,13 @@
 <nav>
 	<div class="logo-container">
-		<a href="#" class="logo">LOGO</a>
+		<a href="{{ path('home_index') }}" class="logo">LOGO</a>
 	</div>
 	<div class="menu-container">
 		<ul>
-			<li><a href="#">Accueil</a></li>
-			<li><a href="#">Qui sommes-nous</a></li>
-			<li><a href="#">Contact</a></li>
-			<li><a href="#">Connexion</a></li>
+			<li><a href="{{ path('home_index') }}">Accueil</a></li>
+			<li><a href="{{ path('about_us') }}">Qui sommes-nous</a></li>
+			<li><a href="{{ path('contact_us') }}">Contact</a></li>
+			<li><a href="{{ path('connexion_form') }}">Connexion</a></li>
 		</ul>
 	</div>
 </nav>
