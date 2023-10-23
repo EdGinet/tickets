@@ -28,18 +28,24 @@ class Account implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private array $roles = [];
 
-    /**
-     * @var string The hashed password
-     */
     #[ORM\Column]
     #[Assert\NotBlank()]
     private ?string $password = null;
 
+    #[Assert\NotBlank]
     private ?string $plainPassword = null;
 
     #[ORM\OneToOne(cascade: ['persist', 'remove'])]
     #[ORM\JoinColumn(nullable: false)]
     private ?User $user = null;
+
+    #[ORM\Column]
+    #[Assert\NotNull()]
+    private \DateTimeImmutable $created_at;
+
+    public function __construct() {
+        $this->created_at = new \DateTimeImmutable();
+    }
 
     public function getId(): ?int
     {
@@ -58,19 +64,11 @@ class Account implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    /**
-     * A visual identifier that represents this user.
-     *
-     * @see UserInterface
-     */
     public function getUserIdentifier(): string
     {
         return (string) $this->email;
     }
 
-    /**
-     * @see UserInterface
-     */
     public function getRoles(): array
     {
         $roles = $this->roles;
@@ -87,9 +85,6 @@ class Account implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    /**
-     * @see PasswordAuthenticatedUserInterface
-     */
     public function getPassword(): string
     {
         return $this->password;
@@ -106,19 +101,17 @@ class Account implements UserInterface, PasswordAuthenticatedUserInterface
 	 * @return string|null
 	 */
 	public function getPlainPassword(): ?string {
-		return $this->plainPassword;
-	}
+         		return $this->plainPassword;
+         	}
 
     /**
 	 * @param string|null $plainPassword 
 	 * @return self
 	 */
 	public function setPlainPassword(?string $plainPassword): self {
-		$this->plainPassword = $plainPassword;
-		return $this;
-	}
-
-	
+         		$this->plainPassword = $plainPassword;
+         		return $this;
+         	}
 
     /**
      * @see UserInterface
@@ -137,6 +130,18 @@ class Account implements UserInterface, PasswordAuthenticatedUserInterface
     public function setUser(User $user): static
     {
         $this->user = $user;
+
+        return $this;
+    }
+
+    public function getCreatedAt(): ?\DateTimeImmutable
+    {
+        return $this->created_at;
+    }
+
+    public function setCreatedAt(\DateTimeImmutable $created_at): static
+    {
+        $this->created_at = $created_at;
 
         return $this;
     }
