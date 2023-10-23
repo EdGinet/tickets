@@ -16,11 +16,10 @@ class AppFixtures extends Fixture
      * @var \Generator
      */
     private Generator $faker;
-    private UserPasswordHasherInterface $hasher;
+    
 
-    public function __construct(UserPasswordHasherInterface $hasher) {
+    public function __construct() {
         $this->faker = Factory::create("fr_FR");
-        $this->hasher = $hasher;
     }
     
     public function load(ObjectManager $manager): void
@@ -47,10 +46,7 @@ class AppFixtures extends Fixture
             $account->setUser($user)
                     ->setEmail($this->faker->unique()->safeEmail())
                     ->setRoles(['ROLE_USER'])
-                    ->setPassword($this->hasher->hashPassword(
-                        $account,
-                        'password'
-                    ));
+                    ->setPlainPassword('Password');
                     
             $manager->persist($account);
         }

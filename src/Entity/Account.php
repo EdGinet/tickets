@@ -12,6 +12,7 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 #[UniqueEntity('email')]
 #[ORM\Entity(repositoryClass: AccountRepository::class)]
+#[ORM\EntityListeners(['App\EntityListener\AccountListener'])]
 class Account implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
