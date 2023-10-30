@@ -35,5 +35,7 @@ class AccountListener {
                 $account->getPlainPassword()
             )
         );
+
+        $account->setPlainPassword(null);
     }
 }
