@@ -1,14 +1,18 @@
 <?php
+
 namespace App\Controller;
 
-use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
 
-class AboutUsController extends AbstractController 
+class AboutUsController extends AbstractController
 {
-    #[Route('/qui_sommes_nous', name:'about_us', methods: ['GET'])]
-    public function show(): Response {
-        return $this->render('about_us.html.twig');
+    #[Route('/qui_sommes_nous', name: 'app_about_us')]
+    public function index(): Response
+    {
+        return $this->render('pages/about_us/about_us.html.twig', [
+            'controller_name' => 'AboutUsController',
+        ]);
     }
 }

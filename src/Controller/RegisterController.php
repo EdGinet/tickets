@@ -1,14 +1,18 @@
 <?php
+
 namespace App\Controller;
 
-use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
 
-class RegisterController extends AbstractController 
+class RegisterController extends AbstractController
 {
-    #[Route('/inscription', name:'register', methods: ['GET', 'POST'])]
-    public function show() : Response {
-        return $this->render('register.html.twig');
+    #[Route('/inscription', name: 'app_register')]
+    public function index(): Response
+    {
+        return $this->render('pages/register/register.html.twig', [
+            'controller_name' => 'RegisterController',
+        ]);
     }
 }
