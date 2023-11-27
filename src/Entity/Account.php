@@ -44,6 +44,9 @@ class Account implements UserInterface, PasswordAuthenticatedUserInterface
     #[Assert\NotNull()]
     private \DateTimeImmutable $created_at;
 
+    //#[ORM\Column(type: 'boolean')]
+    //private $isVerified = false;
+
     public function __construct() {
         $this->created_at = new \DateTimeImmutable();
     }
@@ -102,17 +105,17 @@ class Account implements UserInterface, PasswordAuthenticatedUserInterface
 	 * @return string|null
 	 */
 	public function getPlainPassword(): ?string {
-         		return $this->plainPassword;
-         	}
+                  		return $this->plainPassword;
+                  	}
 
     /**
 	 * @param string|null $plainPassword 
 	 * @return self
 	 */
 	public function setPlainPassword(?string $plainPassword): self {
-         		$this->plainPassword = $plainPassword;
-         		return $this;
-         	}
+                  		$this->plainPassword = $plainPassword;
+                  		return $this;
+                  	}
 
     /**
      * @see UserInterface
@@ -146,6 +149,18 @@ class Account implements UserInterface, PasswordAuthenticatedUserInterface
 
         return $this;
     }
+
+    /* public function isVerified(): bool
+    {
+        return $this->isVerified;
+    }
+
+    public function setIsVerified(bool $isVerified): static
+    {
+        $this->isVerified = $isVerified;
+
+        return $this;
+    } */
 
 	
 }

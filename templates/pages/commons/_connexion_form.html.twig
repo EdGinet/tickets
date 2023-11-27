@@ -7,8 +7,8 @@
 
 		<input type="password" name="_password" required/>
 
-		{% if error %}
-			<div>{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+		{% if Error  %}
+			<div>{{ Error.messageKey|trans(Error.messageData, 'security') }}</div>
 		{% endif %}
 
 		<input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
