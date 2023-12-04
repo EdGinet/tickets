@@ -4,11 +4,14 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Entity\Account;
+use App\Security\EmailVerifier;
 use App\Form\RegistrationFormType;
 use App\Form\RegistrationUserType;
+use Symfony\Component\Mime\Address;
 use App\Entity\RegistrationFormData;
 use App\Form\RegistrationAccountType;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -16,6 +19,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use SymfonyCasts\Bundle\VerifyEmail\Exception\VerifyEmailExceptionInterface;
 
 class SecurityController extends AbstractController
 {
@@ -37,17 +41,17 @@ class SecurityController extends AbstractController
     }
 
 
-    // private EmailVerifier $emailVerifier;
+    private EmailVerifier $emailVerifier;
 
-    /* public function __construct(EmailVerifier $emailVerifier)
+    public function __construct(EmailVerifier $emailVerifier)
     {
         $this->emailVerifier = $emailVerifier;
-    } */
+    }
 
     #[Route('/inscription', name: 'app_register', methods: ['GET', 'POST'])]
     public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager): Response
     {
-        $formData = new RegistrationFormData;
+        $formData = new RegistrationFormData();
         $account = new Account();
         $user = new User();
 
@@ -74,13 +78,13 @@ class SecurityController extends AbstractController
             $entityManager->flush();
 
             // generate a signed url and email it to the user
-            /* $this->emailVerifier->sendEmailConfirmation('app_verify_email', $account,
+            $this->emailVerifier->sendEmailConfirmation('app_verify_email', $account,
                 (new TemplatedEmail())
                     ->from(new Address('edwinginet@gmail.com', 'Ed'))
                     ->to($account->getEmail())
                     ->subject('Please Confirm your Email')
                     ->htmlTemplate('registration/confirmation_email.html.twig')
-            ); */
+            );
             // do anything else you need here, like send an email
 
             return $this->redirectToRoute('app_login');
@@ -98,7 +102,6 @@ class SecurityController extends AbstractController
 
         // validate email confirmation link, sets User::isVerified=true and persists
 
-        // @TODO INSTALLER email verifier bundle
         try {
             $this->emailVerifier->handleEmailConfirmation($request, $this->getUser());
         } catch (VerifyEmailExceptionInterface $exception) {
