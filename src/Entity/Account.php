@@ -40,12 +40,12 @@ class Account implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\JoinColumn(nullable: false)]
     private ?User $user = null;
 
+    #[ORM\Column(type: 'boolean')]
+    private $isVerified = false;
+
     #[ORM\Column]
     #[Assert\NotNull()]
     private \DateTimeImmutable $created_at;
-
-    #[ORM\Column(type: 'boolean')]
-    private $isVerified = false;
 
     public function __construct() {
         $this->created_at = new \DateTimeImmutable();
@@ -138,18 +138,6 @@ class Account implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getCreatedAt(): ?\DateTimeImmutable
-    {
-        return $this->created_at;
-    }
-
-    public function setCreatedAt(\DateTimeImmutable $created_at): static
-    {
-        $this->created_at = $created_at;
-
-        return $this;
-    }
-
     public function isVerified(): bool
     {
         return $this->isVerified;
@@ -162,5 +150,16 @@ class Account implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
+    public function getCreatedAt(): ?\DateTimeImmutable
+    {
+        return $this->created_at;
+    }
+
+    public function setCreatedAt(\DateTimeImmutable $created_at): static
+    {
+        $this->created_at = $created_at;
+
+        return $this;
+    }
 	
 }

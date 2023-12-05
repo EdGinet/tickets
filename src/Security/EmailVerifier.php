@@ -2,13 +2,14 @@
 
 namespace App\Security;
 
+use App\Entity\User;
+use App\Entity\Account;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Mailer\MailerInterface;
-use Symfony\Component\Security\Core\User\UserInterface;
-use SymfonyCasts\Bundle\VerifyEmail\Exception\VerifyEmailExceptionInterface;
 use SymfonyCasts\Bundle\VerifyEmail\VerifyEmailHelperInterface;
+use SymfonyCasts\Bundle\VerifyEmail\Exception\VerifyEmailExceptionInterface;
 
 class EmailVerifier
 {
@@ -19,12 +20,12 @@ class EmailVerifier
     ) {
     }
 
-    public function sendEmailConfirmation(string $verifyEmailRouteName, UserInterface $user, TemplatedEmail $email): void
+    public function sendEmailConfirmation(string $verifyEmailRouteName, Account $account, TemplatedEmail $email): void
     {
         $signatureComponents = $this->verifyEmailHelper->generateSignature(
             $verifyEmailRouteName,
-            $user->getId(),
-            $user->getEmail()
+            $account->getId(),
+            $account->getEmail()
         );
 
         $context = $email->getContext();
@@ -37,15 +38,21 @@ class EmailVerifier
         $this->mailer->send($email);
     }
 
+    // Email confirmation, user connects >  is_verified = true
+
     /**
      * @throws VerifyEmailExceptionInterface
      */
-    public function handleEmailConfirmation(Request $request, UserInterface $user): void
+    public function handleEmailConfirmation(Request $request, Account $account): void
     {
-        $this->verifyEmailHelper->validateEmailConfirmation($request->getUri(), $user->getId(), $user->getEmail());
+        $user = $account->getUser();
 
+        $this->verifyEmailHelper->validateEmailConfirmation($request->getUri(), $account->getId(), $account->getEmail());
+
+        $account->setIsVerified(true);
         $user->setIsVerified(true);
 
+        $this->entityManager->persist($account);
         $this->entityManager->persist($user);
         $this->entityManager->flush();
     }

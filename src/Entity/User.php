@@ -35,6 +35,9 @@ class User
     #[Assert\NotBlank]
     private ?string $job = null;
 
+    #[ORM\Column(type: 'boolean')]
+    private $isVerified = false;
+
     #[ORM\Column]
     #[Assert\NotNull()]
     private \DateTimeImmutable $created_at;
@@ -104,6 +107,18 @@ class User
     public function setJob(string $job): static
     {
         $this->job = $job;
+
+        return $this;
+    }
+
+    public function isVerified(): bool
+    {
+        return $this->isVerified;
+    }
+
+    public function setIsVerified(bool $isVerified): static
+    {
+        $this->isVerified = $isVerified;
 
         return $this;
     }

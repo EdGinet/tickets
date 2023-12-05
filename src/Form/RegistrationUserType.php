@@ -81,7 +81,7 @@ class RegistrationUserType extends AbstractType
                     ]),
                     new Regex([
                         'pattern' => '/^[^0-9$€£#\/\*\n\r\t\f\v]+$/u',
-                        'message' => 'Prénom invalide'
+                        'message' => 'Nom de l\'entreprise invalide'
                     ])
                 ]
             ])
