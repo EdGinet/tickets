@@ -5,5 +5,8 @@
 {% endblock %}
 
 {% block body %}
+	{% if app.flashes('success') is not empty %}
+		{% include 'pages/flash_messages/registration_success.html.twig' %}
+	{% endif %}
 	{% include "pages/commons/_connexion_form.html.twig" %}
 {% endblock %}

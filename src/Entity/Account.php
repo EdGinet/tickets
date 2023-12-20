@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\AccountRepository;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -47,7 +48,8 @@ class Account implements UserInterface, PasswordAuthenticatedUserInterface
     #[Assert\NotNull()]
     private \DateTimeImmutable $created_at;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->created_at = new \DateTimeImmutable();
     }
 
@@ -100,22 +102,24 @@ class Account implements UserInterface, PasswordAuthenticatedUserInterface
 
         return $this;
     }
-    
-    /**
-	 * @return string|null
-	 */
-	public function getPlainPassword(): ?string {
-                  		return $this->plainPassword;
-                  	}
 
     /**
-	 * @param string|null $plainPassword 
-	 * @return self
-	 */
-	public function setPlainPassword(?string $plainPassword): self {
-                  		$this->plainPassword = $plainPassword;
-                  		return $this;
-                  	}
+     * @return string|null
+     */
+    public function getPlainPassword(): ?string
+    {
+        return $this->plainPassword;
+    }
+
+    /**
+     * @param string|null $plainPassword 
+     * @return self
+     */
+    public function setPlainPassword(?string $plainPassword): self
+    {
+        $this->plainPassword = $plainPassword;
+        return $this;
+    }
 
     /**
      * @see UserInterface
@@ -161,5 +165,5 @@ class Account implements UserInterface, PasswordAuthenticatedUserInterface
 
         return $this;
     }
-	
+
 }

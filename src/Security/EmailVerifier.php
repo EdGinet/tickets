@@ -2,7 +2,6 @@
 
 namespace App\Security;
 
-use App\Entity\User;
 use App\Entity\Account;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
@@ -43,17 +42,21 @@ class EmailVerifier
     /**
      * @throws VerifyEmailExceptionInterface
      */
-    public function handleEmailConfirmation(Request $request, Account $account): void
+    /*public function handleEmailConfirmation(Request $request, Account $account): void
     {
+        $token = $account->getTokenVerification();
         $user = $account->getUser();
 
         $this->verifyEmailHelper->validateEmailConfirmation($request->getUri(), $account->getId(), $account->getEmail());
 
-        $account->setIsVerified(true);
-        $user->setIsVerified(true);
+        if ($token) {
+            $account->setIsVerified(true);
+            $user->setIsVerified(true);
 
-        $this->entityManager->persist($account);
-        $this->entityManager->persist($user);
-        $this->entityManager->flush();
-    }
+            $this->entityManager->persist($account);
+            $this->entityManager->persist($user);
+            $this->entityManager->flush();
+        }
+
+    }*/
 }

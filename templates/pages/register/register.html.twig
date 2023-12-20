@@ -9,13 +9,13 @@
 		<h1>Créer un compte</h1>
 		<div class="form-acccount">
 			{{form(registrationForm)}}
+			</div>
+
+		</div>
+		<div class="login-link-container">
+			<p class="message">Vous avez déjà un compte ?
+				<a href="{{ path('app_login') }}" id="login-btn" class="other-btn">Connectez-vous</a>
+			</p>
 		</div>
 
-	</div>
-	<div class="login-link-container">
-		<p class="message">Vous avez déjà un compte ?
-			<a href="{{ path('app_login') }}" id="login-btn" class="other-btn">Connectez-vous</a>
-		</p>
-	</div>
-
-{% endblock %}
+	{% endblock %}
