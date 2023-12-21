@@ -4,7 +4,9 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Entity\Account;
+use App\Repository\AccountRepository;
 use App\Security\EmailVerifier;
+use App\Security\JWTService;
 use Symfony\Component\Mime\Email;
 use App\Form\RegistrationFormType;
 use App\Form\RegistrationUserType;
@@ -48,7 +50,7 @@ class SecurityController extends AbstractController
     }
 
 
-    /*private EmailVerifier $emailVerifier;
+    private EmailVerifier $emailVerifier;
 
     public function __construct(EmailVerifier $emailVerifier)
     {
@@ -57,15 +59,46 @@ class SecurityController extends AbstractController
 
     // EMAIL VERIFICATION
 
-    #[Route('/verify/email', name: 'app_verify_email')]
-    public function verifyUserEmail(Request $request, TranslatorInterface $translator): Response
+    #[Route('/verify/{token}', name: 'app_verify_email')]
+
+    public function verifyAccount($token, JWTService $jwt, AccountRepository $accountRepository, EntityManagerInterface $entityManager): Response
     {
+        // On vérifie si le token est valide, n'a pas expiré et n'a pas été modifié
+        if($jwt->isValid($token) && !$jwt->isExpired($token) && $jwt->check($token, $this->getParameter('app.jwtsecret'))) {
+            // On récupère le payload
+            $payload = $jwt->getPayload($token);
+
+            // On récupère le account du token
+            $account = $accountRepository->find($payload['account_id']);
+
+            // On vérifie que l'utilisateur existe et n'a pas encore activé son compte
+            if($account && !$account->IsVerified()) {
+
+                $account->setIsVerified(true);
+                $entityManager->persist($account);
+                $entityManager->flush();
+
+                $this->addFlash('success', 'Utilisateur activé');
+
+                return $this->redirectToRoute('app_login');
+            }
+        }
+
+        // Ici un problème se pose dans le token
+        $this->addFlash('danger', 'Le token est invalide ou a expiré');
+        
+        return $this->redirectToRoute('app_home');
+    }
+    /*public function verifyUser(Request $request, TranslatorInterface $translator): Response
+    {
+
+        $token = $request->attributes->get('token');
         // $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
 
         // validate email confirmation link, sets User::isVerified=true and persists
 
         try {
-            $this->emailVerifier->handleEmailConfirmation($request, $this->getUser());
+            $this->emailVerifier->handleEmailConfirmation($request, $account);
         } catch (VerifyEmailExceptionInterface $exception) {
             $this->addFlash('verify_email_error', $translator->trans($exception->getReason(), [], 'VerifyEmailBundle'));
 

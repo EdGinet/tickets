@@ -7,7 +7,7 @@
 
     <p>Pour valider votre compte Tickets, confirmez votre adresse email</p>
 
-    <a href="{{ signedUrl|raw }}">Confirmer mon adresse email</a>.
+    <a href="{{ absolute_url(path('app_verify_email', {token : token})) }}">Confirmer mon adresse email</a>.
 
     <p class="expire-link">This link will expire in
 	{{ expiresAtMessageKey|trans(expiresAtMessageData, 'VerifyEmailBundle') }}.</p>

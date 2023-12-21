@@ -57,7 +57,7 @@ class RegisterController extends AbstractController
 
             $plainPassword = $account->getPlainPassword();
 
-            // encode the plain password
+            // Encode the plain password
             $account->setPassword($userPasswordHasher->hashPassword($account, $plainPassword))
                 ->setUser($user)
                 ->setRoles(['ROLE_USER']);
@@ -65,37 +65,37 @@ class RegisterController extends AbstractController
             $entityManager->persist($account);
             $entityManager->flush();
 
-            // On génère le JWT de l'utilisateur
-            // On crée le Header
+            // Generate user's JWT
+            // Create Header
             $header = [
                 'typ' => 'JWT',
                 'alg' => 'HS256'
             ];
 
-            // On crée le Payload
+            // Create Payload
             $payload = [
                 'account_id' => $account->getId()
             ];
 
-            // On génère le token
+            // Generate token
             $token = $jwt->generate($header, $payload, $this->getParameter('app.jwtsecret'));
 
-            dd($token);
+            //$encodedToken = urlencode($token);
 
-            //$token = $this->tokenGenerator->generateToken();
-            //$account->setTokenVerification($token);
-
-            // generate a signed url and email it to the user
-            
-            /*$this->emailVerifier->sendEmailConfirmation(
+            // Generate a signed url and email it to the user
+            $this->emailVerifier->sendEmailConfirmation(
                 'app_verify_email',
                 $account,
                 (new TemplatedEmail())
-                    ->from(new Address('edwinginet@gmail.com', 'Ed'))
+                    ->from(new Address('no-reply@tickets.com', 'No-Reply'))
                     ->to($account->getEmail())
                     ->subject('Tickets - Please verify your email')
                     ->htmlTemplate('registration/confirmation_email.html.twig')
-            );*/
+                    ->context([
+                        'account' => $account,
+                        'token' => $token
+                        ])
+            );
 
             return $this->redirectToRoute('app_login');
         }

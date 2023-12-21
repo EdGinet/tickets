@@ -42,21 +42,21 @@ class EmailVerifier
     /**
      * @throws VerifyEmailExceptionInterface
      */
-    /*public function handleEmailConfirmation(Request $request, Account $account): void
+    public function handleEmailConfirmation(Request $request, Account $account): void
     {
-        $token = $account->getTokenVerification();
+
         $user = $account->getUser();
 
         $this->verifyEmailHelper->validateEmailConfirmation($request->getUri(), $account->getId(), $account->getEmail());
 
-        if ($token) {
-            $account->setIsVerified(true);
-            $user->setIsVerified(true);
 
-            $this->entityManager->persist($account);
-            $this->entityManager->persist($user);
-            $this->entityManager->flush();
-        }
+        $account->setIsVerified(true);
+        $user->setIsVerified(true);
 
-    }*/
+        $this->entityManager->persist($account);
+        $this->entityManager->persist($user);
+        $this->entityManager->flush();
+
+
+    }
 }
