@@ -4,26 +4,30 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Entity\Account;
-use App\Repository\AccountRepository;
-use App\Security\EmailVerifier;
 use App\Security\JWTService;
+use App\Security\EmailVerifier;
 use Symfony\Component\Mime\Email;
 use App\Form\RegistrationFormType;
 use App\Form\RegistrationUserType;
 use Symfony\Component\Mime\Address;
 use App\Entity\RegistrationFormData;
 use App\Form\RegistrationAccountType;
+use App\Repository\AccountRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Security\Core\Security;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Contracts\Translation\TranslatorInterface;
+use App\Security\Exception\AccountNotVerifiedException;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use SymfonyCasts\Bundle\VerifyEmail\Exception\VerifyEmailExceptionInterface;
+
 
 class SecurityController extends AbstractController
 {
@@ -35,6 +39,7 @@ class SecurityController extends AbstractController
     {
 
         $error = $authenticationUtils->getLastAuthenticationError();
+
         return $this->render('pages/security/login.html.twig', [
             'last_username' => $authenticationUtils->getLastUsername(),
             'Error' => $error
@@ -42,11 +47,10 @@ class SecurityController extends AbstractController
     }
 
     //LOGOUT
-
     #[Route('/deconnexion', name: 'app_logout', methods: ['GET'])]
     public function logout(): never
     {
-        //Nothing to do here...
+        // Rien à ajouter
     }
 
 
@@ -58,13 +62,11 @@ class SecurityController extends AbstractController
     }
 
     // EMAIL VERIFICATION
-
     #[Route('/verify/{token}', name: 'app_verify_email')]
-
     public function verifyAccount($token, JWTService $jwt, AccountRepository $accountRepository, EntityManagerInterface $entityManager): Response
     {
         // On vérifie si le token est valide, n'a pas expiré et n'a pas été modifié
-        if($jwt->isValid($token) && !$jwt->isExpired($token) && $jwt->check($token, $this->getParameter('app.jwtsecret'))) {
+        if ($jwt->isValid($token) && !$jwt->isExpired($token) && $jwt->check($token, $this->getParameter('app.jwtsecret'))) {
             // On récupère le payload
             $payload = $jwt->getPayload($token);
 
@@ -72,7 +74,7 @@ class SecurityController extends AbstractController
             $account = $accountRepository->find($payload['account_id']);
 
             // On vérifie que l'utilisateur existe et n'a pas encore activé son compte
-            if($account && !$account->IsVerified()) {
+            if ($account && !$account->IsVerified()) {
 
                 $account->setIsVerified(true);
                 $entityManager->persist($account);
@@ -86,31 +88,7 @@ class SecurityController extends AbstractController
 
         // Ici un problème se pose dans le token
         $this->addFlash('danger', 'Le token est invalide ou a expiré');
-        
+
         return $this->redirectToRoute('app_home');
     }
-    /*public function verifyUser(Request $request, TranslatorInterface $translator): Response
-    {
-
-        $token = $request->attributes->get('token');
-        // $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
-
-        // validate email confirmation link, sets User::isVerified=true and persists
-
-        try {
-            $this->emailVerifier->handleEmailConfirmation($request, $account);
-        } catch (VerifyEmailExceptionInterface $exception) {
-            $this->addFlash('verify_email_error', $translator->trans($exception->getReason(), [], 'VerifyEmailBundle'));
-
-            return $this->redirectToRoute('app_register');
-        }
-
-        // @TODO Change the redirect on success and handle or remove the flash message in your templates
-        $this->addFlash('success', 'Your email address has been verified.');
-
-        return $this->redirectToRoute('app_login');
-    }*/
-
-
-
 }

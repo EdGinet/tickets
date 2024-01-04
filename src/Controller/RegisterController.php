@@ -7,12 +7,10 @@ use App\Entity\Account;
 use App\Security\JWTService;
 use App\Security\EmailVerifier;
 use App\Form\RegistrationFormType;
-use Symfony\Component\Mime\Address;
+use App\Service\EmailService;
 use App\Entity\RegistrationFormData;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -30,15 +28,17 @@ class RegisterController extends AbstractController
         $this->emailVerifier = $emailVerifier;
         $this->tokenGenerator = $tokenGenerator;
     }
-    // REGISTRATION 
 
+    // REGISTRATION 
     #[Route('/inscription', name: 'app_register', methods: ['GET', 'POST'])]
     public function register(
         Request $request,
         UserPasswordHasherInterface $userPasswordHasher,
         EntityManagerInterface $entityManager,
-        MailerInterface $mailer, JWTService $jwt
-    ): Response {
+        EmailService $mail,
+        //EmailVerifier $emailVerifier,
+        JWTService $jwt
+        ): Response {
         $formData = new RegistrationFormData();
         $account = new Account();
         $user = new User();
@@ -80,23 +80,18 @@ class RegisterController extends AbstractController
             // Generate token
             $token = $jwt->generate($header, $payload, $this->getParameter('app.jwtsecret'));
 
-            //$encodedToken = urlencode($token);
-
-            // Generate a signed url and email it to the user
-            $this->emailVerifier->sendEmailConfirmation(
-                'app_verify_email',
-                $account,
-                (new TemplatedEmail())
-                    ->from(new Address('no-reply@tickets.com', 'No-Reply'))
-                    ->to($account->getEmail())
-                    ->subject('Tickets - Please verify your email')
-                    ->htmlTemplate('registration/confirmation_email.html.twig')
-                    ->context([
-                        'account' => $account,
-                        'token' => $token
-                        ])
+            // On envoie l'email de confirmation
+            $mail->sendEmail(
+                'no-reply@tickets.com',
+                $account->getEmail(),
+                'Tickets - Please verify your email',
+                'confirmation_email',
+                [
+                    'account' => $account,
+                    'token' => $token
+                ]
             );
-
+            
             return $this->redirectToRoute('app_login');
         }
 
