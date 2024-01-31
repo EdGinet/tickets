@@ -2,7 +2,6 @@
 
 namespace App\Form;
 
-use App\Entity\Account;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Constraints\Email;
@@ -10,10 +9,9 @@ use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
-use Symfony\Component\Form\Extension\Core\Type\PasswordType;
-use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
-class RegistrationAccountType extends AbstractType
+class ResetPasswordRequestFormType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
@@ -40,34 +38,18 @@ class RegistrationAccountType extends AbstractType
                     ])
                 ]
             ])
-            ->add('plainPassword', RepeatedType::class, [
-                'type' => PasswordType::class,
-                'invalid_message' => 'Mot de passe invalide',
-                'options' => [
-                    'attr' => ['class' => 'password']
-                ],
-                'required' => true,
-                'first_options' => [
-                    'label' => false,
-                    'attr' => ['placeholder' => 'Mot de passe']
-                ],
-                'second_options' => [
-                    'label' => false,
-                    'attr' => ['placeholder' => 'Confirmation du mot de passe']
-                ],
-                'constraints' => [
-                    new NotBlank([
-                        'message' => 'Mot de passe invalide'
-                    ])
+            ->add('envoyer', SubmitType::class, [
+                'attr' => [
+                    'class' => 'submit-btn'
                 ]
             ])
-        ;
+            ;
     }
 
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'data_class' => Account::class,
+            // Configure your form options here
         ]);
     }
 }

@@ -84,7 +84,7 @@ class RegisterController extends AbstractController
             $mail->sendEmail(
                 'no-reply@tickets.com',
                 $account->getEmail(),
-                'Tickets - Please verify your email',
+                'Tickets - Confirmez votre email',
                 'confirmation_email',
                 [
                     'account' => $account,
@@ -92,6 +92,7 @@ class RegisterController extends AbstractController
                 ]
             );
             
+            $this->addFlash('success', 'Un email de confirmation vous a été envoyé');
             return $this->redirectToRoute('app_login');
         }
 

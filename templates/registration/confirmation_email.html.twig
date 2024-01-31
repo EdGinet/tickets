@@ -1,13 +1,15 @@
 <div>
-    <h1>LOGO</h1>
+	<a href="{{ path('app_home')}}" class="logo">
+		<h1>LOGO</h1>
+	</a>
 </div>
 
 <div>
 	<h1>Confirmez votre adresse email</h1>
 
-    <p>Pour valider votre compte Tickets, confirmez votre adresse email</p>
+	<p>Pour valider votre compte Tickets, confirmez votre adresse email</p>
 
-    <a href="{{ absolute_url(path('app_verify_email', {token : token})) }}">Confirmer mon adresse email</a>.
+	<a href="{{ absolute_url(path('app_verify_email', {token : token})) }}">Confirmer mon adresse email</a>.
 
-    <p class="expire-link">Ce lien expirera dans 1 heure.</p>
+	<p class="expire-link">Ce lien expirera dans 1 heure.</p>
 </div>

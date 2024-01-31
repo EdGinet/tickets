@@ -48,6 +48,9 @@ class Account implements UserInterface, PasswordAuthenticatedUserInterface
     #[Assert\NotNull()]
     private \DateTimeImmutable $created_at;
 
+    #[ORM\Column(type: 'string', length: 100)]
+    private $resetToken;
+
     public function __construct()
     {
         $this->created_at = new \DateTimeImmutable();
@@ -162,6 +165,18 @@ class Account implements UserInterface, PasswordAuthenticatedUserInterface
     public function setCreatedAt(\DateTimeImmutable $created_at): static
     {
         $this->created_at = $created_at;
+
+        return $this;
+    }
+
+    public function getResetToken(): ?string
+    {
+        return $this->resetToken;
+    }
+
+    public function setResetToken(?string $resetToken): self
+    {
+        $this->resetToken = $resetToken;
 
         return $this;
     }
